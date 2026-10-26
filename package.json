@@ -1,0 +1,19 @@
+{
+  "name": "elora-smile-clinic-architectural-explorer",
+  "version": "2.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Offline browser-based 3D academic concept viewer for Elora Smile Clinic",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1",
+    "build": "vite build",
+    "postbuild": "esbuild src/main.js --bundle --minify --format=iife --platform=browser --target=es2020 --outfile=app.bundle.js",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "node scripts/check_scene.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "three": "0.186.1",
+    "vite": "8.3.5"
+  }
+}

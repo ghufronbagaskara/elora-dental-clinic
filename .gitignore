@@ -1,0 +1,8 @@
+node_modules/
+dist/
+__pycache__/
+*.pyc
+ASSET_MANIFEST*.json
+.vercel/
+.env
+.env.*

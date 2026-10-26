@@ -1,0 +1,786 @@
+[
+  {
+    "file": "chair.glb",
+    "title": "Dental Chair (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-dental-chair-da5c65c7",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 41804,
+    "triangles": 1656,
+    "sizeMeters": [
+      0.66,
+      1.622,
+      1.676
+    ]
+  },
+  {
+    "file": "chair_reclined.glb",
+    "title": "Dental Chair Reclined (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-dental-chair-reclined-98149de1",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 40532,
+    "triangles": 1656,
+    "sizeMeters": [
+      0.66,
+      1.1,
+      2.131
+    ]
+  },
+  {
+    "file": "delivery.glb",
+    "title": "Delivery Unit (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-delivery-unit-5e9334f5",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 43272,
+    "triangles": 1240,
+    "sizeMeters": [
+      0.5,
+      1.228,
+      1.12
+    ]
+  },
+  {
+    "file": "chair_blue.glb",
+    "title": "Dental Chair Blue (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-dental-chair-blue-4fd61edf",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 42628,
+    "triangles": 1656,
+    "sizeMeters": [
+      0.66,
+      1.622,
+      1.676
+    ]
+  },
+  {
+    "file": "monitor.glb",
+    "title": "Surgery Monitor Arm (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-surgery-monitor-arm-0b68e534",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 17088,
+    "triangles": 460,
+    "sizeMeters": [
+      0.566,
+      1.49,
+      0.653
+    ]
+  },
+  {
+    "file": "xray_arm.glb",
+    "title": "Intraoral Xray Arm (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-intraoral-xray-arm-7ea56888",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 23036,
+    "triangles": 488,
+    "sizeMeters": [
+      0.246,
+      0.36,
+      1.328
+    ]
+  },
+  {
+    "file": "light.glb",
+    "title": "Operating Light (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-operating-light-e636b996",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 31948,
+    "triangles": 772,
+    "sizeMeters": [
+      0.58,
+      2.21,
+      1.4
+    ]
+  },
+  {
+    "file": "spittoon.glb",
+    "title": "Spittoon Unit (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-spittoon-unit-5db2c52f",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 30160,
+    "triangles": 812,
+    "sizeMeters": [
+      0.508,
+      1.025,
+      0.356
+    ]
+  },
+  {
+    "file": "dentist_stool.glb",
+    "title": "Dentists Stool (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-dentists-stool-c6053f0f",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 36732,
+    "triangles": 844,
+    "sizeMeters": [
+      0.526,
+      0.78,
+      0.559
+    ]
+  },
+  {
+    "file": "nurse_stool.glb",
+    "title": "Nurses Stool (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-nurses-stool-963c4692",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 43592,
+    "triangles": 1020,
+    "sizeMeters": [
+      0.526,
+      0.86,
+      0.5
+    ]
+  },
+  {
+    "file": "sink_cabinet.glb",
+    "title": "Cabinet Run Sink Module (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-cabinet-run-sink-module-42493004",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 30760,
+    "triangles": 1392,
+    "sizeMeters": [
+      1,
+      1.21,
+      0.652
+    ]
+  },
+  {
+    "file": "suction.glb",
+    "title": "Suction Unit (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-suction-unit-a2a55578",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 21024,
+    "triangles": 604,
+    "sizeMeters": [
+      0.342,
+      0.592,
+      0.302
+    ]
+  },
+  {
+    "file": "cabinet.glb",
+    "title": "Cabinet Run Module (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-cabinet-run-module-2856164b",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 19524,
+    "triangles": 1296,
+    "sizeMeters": [
+      1,
+      0.96,
+      0.652
+    ]
+  },
+  {
+    "file": "instrument_tray.glb",
+    "title": "Instrument Tray (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-instrument-tray-33b4d81c",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 30452,
+    "triangles": 728,
+    "sizeMeters": [
+      0.28,
+      0.039,
+      0.213
+    ]
+  },
+  {
+    "file": "scaler.glb",
+    "title": "Ultrasonic Scaler (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-ultrasonic-scaler-11a53ef2",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 28284,
+    "triangles": 712,
+    "sizeMeters": [
+      0.272,
+      0.295,
+      0.332
+    ]
+  },
+  {
+    "file": "dispenser.glb",
+    "title": "Glove And Mask Dispenser (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-glove-and-mask-dispenser-64ec22b4",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 38044,
+    "triangles": 1248,
+    "sizeMeters": [
+      0.521,
+      0.34,
+      0.13
+    ]
+  },
+  {
+    "file": "pedal_bin.glb",
+    "title": "Pedal Waste Bin (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-pedal-waste-bin-5ba4c7fc",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 25264,
+    "triangles": 572,
+    "sizeMeters": [
+      0.34,
+      0.549,
+      0.395
+    ]
+  },
+  {
+    "file": "curing_light.glb",
+    "title": "Curing Light (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-curing-light-3b7ed27a",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 22728,
+    "triangles": 484,
+    "sizeMeters": [
+      0.14,
+      0.184,
+      0.203
+    ]
+  },
+  {
+    "file": "autoclave.glb",
+    "title": "Autoclave Bench (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-autoclave-bench-13c84e68",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 49632,
+    "triangles": 1764,
+    "sizeMeters": [
+      0.9,
+      1.39,
+      0.77
+    ]
+  },
+  {
+    "file": "sensor.glb",
+    "title": "Xray Sensor Tray (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-xray-sensor-tray-cdf20eb4",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 16072,
+    "triangles": 336,
+    "sizeMeters": [
+      0.28,
+      0.053,
+      0.2
+    ]
+  },
+  {
+    "file": "washer.glb",
+    "title": "Instrument Washer (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-instrument-washer-80e1c484",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 19496,
+    "triangles": 696,
+    "sizeMeters": [
+      0.64,
+      0.94,
+      0.66
+    ]
+  },
+  {
+    "file": "ultrasonic.glb",
+    "title": "Ultrasonic Cleaner Bath (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-ultrasonic-cleaner-bath-1c9409ff",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 21352,
+    "triangles": 660,
+    "sizeMeters": [
+      0.415,
+      0.262,
+      0.305
+    ]
+  },
+  {
+    "file": "sharps.glb",
+    "title": "Sharps Bin (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-sharps-bin-fe796f33",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 10168,
+    "triangles": 288,
+    "sizeMeters": [
+      0.254,
+      0.325,
+      0.212
+    ]
+  },
+  {
+    "file": "pouch_rack.glb",
+    "title": "Sterile Pouch Rack (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-sterile-pouch-rack-6c397dee",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 26412,
+    "triangles": 1056,
+    "sizeMeters": [
+      0.59,
+      0.97,
+      0.3
+    ]
+  },
+  {
+    "file": "reception.glb",
+    "title": "Reception Desk (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-reception-desk-ad8b99c5",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 36596,
+    "triangles": 1344,
+    "sizeMeters": [
+      2.44,
+      1.36,
+      0.84
+    ]
+  },
+  {
+    "file": "sterile_cabinet.glb",
+    "title": "Sterile Store Cabinet (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-sterile-store-cabinet-ac44fdc4",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 55356,
+    "triangles": 2964,
+    "sizeMeters": [
+      0.92,
+      2.02,
+      0.478
+    ]
+  },
+  {
+    "file": "waiting_chairs.glb",
+    "title": "Waiting Chairs Run (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-waiting-chairs-run-23b191c8",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 34016,
+    "triangles": 1416,
+    "sizeMeters": [
+      1.756,
+      0.95,
+      0.52
+    ]
+  },
+  {
+    "file": "low_table.glb",
+    "title": "Low Table With Magazines (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-low-table-with-magazines-12960d5e",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 21104,
+    "triangles": 720,
+    "sizeMeters": [
+      0.9,
+      0.462,
+      0.5
+    ]
+  },
+  {
+    "file": "water_cooler.glb",
+    "title": "Water Cooler (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-water-cooler-ddcca514",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 30996,
+    "triangles": 856,
+    "sizeMeters": [
+      0.405,
+      1.35,
+      0.418
+    ]
+  },
+  {
+    "file": "coral_chairs.glb",
+    "title": "Waiting Chairs Run Coral (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-waiting-chairs-run-coral-2fdfcbd5",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 34076,
+    "triangles": 1416,
+    "sizeMeters": [
+      1.756,
+      0.95,
+      0.52
+    ]
+  },
+  {
+    "file": "play_corner.glb",
+    "title": "Childrens Play Corner (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-childrens-play-corner-f7dbaecc",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 45992,
+    "triangles": 1580,
+    "sizeMeters": [
+      1.03,
+      1.244,
+      0.555
+    ]
+  },
+  {
+    "file": "notice_board.glb",
+    "title": "Notice Board (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-notice-board-2e73a2e3",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 17912,
+    "triangles": 540,
+    "sizeMeters": [
+      1,
+      0.72,
+      0.037
+    ]
+  },
+  {
+    "file": "coat_stand.glb",
+    "title": "Coat Stand (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-coat-stand-53da7706",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 30732,
+    "triangles": 848,
+    "sizeMeters": [
+      0.401,
+      1.736,
+      0.369
+    ]
+  },
+  {
+    "file": "appointment_screen.glb",
+    "title": "Appointment Screen (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-appointment-screen-13007900",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 11660,
+    "triangles": 288,
+    "sizeMeters": [
+      0.94,
+      0.58,
+      0.116
+    ]
+  },
+  {
+    "file": "gel.glb",
+    "title": "Wall Hand Gel (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-wall-hand-gel-2fc70334",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 15168,
+    "triangles": 444,
+    "sizeMeters": [
+      0.14,
+      0.36,
+      0.175
+    ]
+  },
+  {
+    "file": "ceiling_panel.glb",
+    "title": "Ceiling Light Panel (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-ceiling-light-panel-5fd450a0",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 14608,
+    "triangles": 564,
+    "sizeMeters": [
+      1.24,
+      0.1,
+      0.64
+    ]
+  },
+  {
+    "file": "jaw_model.glb",
+    "title": "Articulator With Model (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-articulator-with-model-032999fd",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 43732,
+    "triangles": 1164,
+    "sizeMeters": [
+      0.15,
+      0.188,
+      0.19
+    ]
+  },
+  {
+    "file": "ac_outdoor.glb",
+    "title": "Air conditioner outdoor unit (Home Appliances and Utility Room)",
+    "source": "https://3dassets.dev/assets/home-appliances-and-utility-ac-outdoor-unit-a298bd16",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 113732,
+    "triangles": 2316,
+    "sizeMeters": [
+      0.81,
+      0.61,
+      0.435
+    ]
+  },
+  {
+    "file": "model_boxes.glb",
+    "title": "Model Box Stack (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-model-box-stack-6cd7f002",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 27180,
+    "triangles": 1216,
+    "sizeMeters": [
+      0.315,
+      0.544,
+      0.237
+    ]
+  },
+  {
+    "file": "ac_indoor.glb",
+    "title": "Split air conditioner indoor unit (Home Appliances and Utility Room)",
+    "source": "https://3dassets.dev/assets/home-appliances-and-utility-ac-indoor-split-354b27e3",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 49396,
+    "triangles": 936,
+    "sizeMeters": [
+      0.902,
+      0.29,
+      0.25
+    ]
+  },
+  {
+    "file": "impression_trays.glb",
+    "title": "Impression Tray Set (Dental Practice and Surgery)",
+    "source": "https://3dassets.dev/assets/dental-practice-and-surgery-impression-tray-set-4531389a",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 31412,
+    "triangles": 792,
+    "sizeMeters": [
+      0.36,
+      0.034,
+      0.26
+    ]
+  },
+  {
+    "file": "staff_fridge.glb",
+    "title": "Undercounter fridge 600 (Home Appliances and Utility Room)",
+    "source": "https://3dassets.dev/assets/home-appliances-and-utility-fridge-undercounter-19f917f0",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 70732,
+    "triangles": 1356,
+    "sizeMeters": [
+      0.598,
+      0.82,
+      0.755
+    ]
+  },
+  {
+    "file": "kettle.glb",
+    "title": "Cordless jug kettle (Home Appliances and Utility Room)",
+    "source": "https://3dassets.dev/assets/home-appliances-and-utility-kettle-cordless-09ebd962",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 33348,
+    "triangles": 612,
+    "sizeMeters": [
+      0.252,
+      0.262,
+      0.172
+    ]
+  },
+  {
+    "file": "desktop.glb",
+    "title": "24 inch desktop monitor (Downtown Office Interiors)",
+    "source": "https://3dassets.dev/assets/downtown-office-interiors-monitor-24-inch-cd110e8d",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 27540,
+    "triangles": 506,
+    "sizeMeters": [
+      0.54,
+      0.48,
+      0.18
+    ]
+  },
+  {
+    "file": "task_chair.glb",
+    "title": "Task chair with mesh back (Downtown Office Interiors)",
+    "source": "https://3dassets.dev/assets/downtown-office-interiors-task-chair-mesh-b69df323",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 176828,
+    "triangles": 3616,
+    "sizeMeters": [
+      0.632,
+      1.214,
+      0.71
+    ]
+  },
+  {
+    "file": "guest_chair.glb",
+    "title": "Four-leg guest chair (Downtown Office Interiors)",
+    "source": "https://3dassets.dev/assets/downtown-office-interiors-guest-chair-four-leg-7ab7c1b0",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 78984,
+    "triangles": 1592,
+    "sizeMeters": [
+      0.46,
+      0.899,
+      0.472
+    ]
+  },
+  {
+    "file": "mouse.glb",
+    "title": "Office mouse (Downtown Office Interiors)",
+    "source": "https://3dassets.dev/assets/downtown-office-interiors-mouse-office-4dd122f9",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 16376,
+    "triangles": 304,
+    "sizeMeters": [
+      0.068,
+      0.041,
+      0.115
+    ]
+  },
+  {
+    "file": "records.glb",
+    "title": "Filing cabinet, four drawer (Downtown Office Interiors)",
+    "source": "https://3dassets.dev/assets/downtown-office-interiors-filing-cabinet-4-drawer-e816dbb7",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 43524,
+    "triangles": 1050,
+    "sizeMeters": [
+      0.476,
+      1.346,
+      0.657
+    ]
+  },
+  {
+    "file": "basin.glb",
+    "title": "Pedestal basin 560 (Fitted Kitchen and Bathroom Builder)",
+    "source": "https://3dassets.dev/assets/fitted-kitchen-and-bathroom-builder-basin-pedestal-700d13f4",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 49780,
+    "triangles": 1000,
+    "sizeMeters": [
+      0.56,
+      0.85,
+      0.45
+    ]
+  },
+  {
+    "file": "mirror.glb",
+    "title": "Bathroom mirror with light (Fitted Kitchen and Bathroom Builder)",
+    "source": "https://3dassets.dev/assets/fitted-kitchen-and-bathroom-builder-mirror-with-light-3468f2cc",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 14820,
+    "triangles": 256,
+    "sizeMeters": [
+      0.7,
+      0.9,
+      0.03
+    ]
+  },
+  {
+    "file": "toilet_roll.glb",
+    "title": "Toilet roll holder (Fitted Kitchen and Bathroom Builder)",
+    "source": "https://3dassets.dev/assets/fitted-kitchen-and-bathroom-builder-toilet-roll-holder-715719e9",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 16952,
+    "triangles": 300,
+    "sizeMeters": [
+      0.183,
+      0.11,
+      0.136
+    ]
+  },
+  {
+    "file": "wc.glb",
+    "title": "Close coupled WC (Fitted Kitchen and Bathroom Builder)",
+    "source": "https://3dassets.dev/assets/fitted-kitchen-and-bathroom-builder-wc-close-coupled-13e88a96",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 97852,
+    "triangles": 1920,
+    "sizeMeters": [
+      0.43,
+      0.824,
+      0.615
+    ]
+  },
+  {
+    "file": "lockers.glb",
+    "title": "Staff Locker Bank (Hospital Wards and Clinic Operations)",
+    "source": "https://3dassets.dev/assets/hospital-wards-and-clinic-operations-staff-locker-bank-b5d22764",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 29528,
+    "triangles": 532,
+    "sizeMeters": [
+      1.24,
+      1.95,
+      0.557
+    ]
+  },
+  {
+    "file": "stock_shelf.glb",
+    "title": "Records Shelving (Hospital Wards and Clinic Operations)",
+    "source": "https://3dassets.dev/assets/hospital-wards-and-clinic-operations-records-shelving-788aa5e2",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 23252,
+    "triangles": 588,
+    "sizeMeters": [
+      1.61,
+      1.99,
+      0.5
+    ]
+  },
+  {
+    "file": "xray_viewer.glb",
+    "title": "X-ray viewing screen on a wall arm (Clinic and Veterinary Practice)",
+    "source": "https://3dassets.dev/assets/clinic-and-veterinary-practice-x-ray-viewing-screen-a726d15d",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 46160,
+    "triangles": 876,
+    "sizeMeters": [
+      0.745,
+      1.35,
+      0.409
+    ]
+  },
+  {
+    "file": "keyboard.glb",
+    "title": "Full-size keyboard (Downtown Office Interiors)",
+    "source": "https://3dassets.dev/assets/downtown-office-interiors-keyboard-full-size-0717e0a6",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 57448,
+    "triangles": 1144,
+    "sizeMeters": [
+      0.44,
+      0.026,
+      0.14
+    ]
+  }
+]
