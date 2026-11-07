@@ -3,10 +3,14 @@ import {readFile, readdir, stat} from 'node:fs/promises';
 import vm from 'node:vm';
 import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {MODEL_DATA} from '../src/embedded-assets.js';
 
 // Real geometry and GLB parsing; DOM/WebGL stand-ins keep this check runnable without a browser.
 const size={width:1100,height:850};
+// Geometry is parsed and decoded in Node. The browser check covers bitmap decoding and rendering.
+globalThis.self=globalThis;
+globalThis.createImageBitmap=async()=>({width:1,height:1,close(){}});
 const context2d=new Proxy({}, {get:()=>()=>{}});
 const elements=new Map();
 function element(){return {style:{},dataset:{},children:[],listeners:{},open:false,classList:{toggle(){}},appendChild(child){this.children.push(child);},querySelectorAll(){return this.children;},addEventListener(type,handler){(this.listeners[type]??=[]).push(handler);},showModal(){this.open=true;},close(){this.open=false;this.listeners.close?.forEach(handler=>handler());},getBoundingClientRect:()=>size,getContext:()=>context2d};}
@@ -20,7 +24,7 @@ class Controls extends THREE.EventDispatcher{
  constructor(camera){super();this.object=camera;this.target=new THREE.Vector3();}
  update(){this.object.lookAt(this.target);this.object.updateMatrixWorld(true);}
 }
-const sandbox={THREE:{...THREE,WebGLRenderer:Renderer},OrbitControls:Controls,GLTFLoader,MODEL_DATA,ArrayBuffer,Uint8Array,document,window:{devicePixelRatio:1.25},innerWidth:1440,ResizeObserver:class{observe(){}},requestAnimationFrame(){},atob,performance,setTimeout,console};
+const sandbox={THREE:{...THREE,WebGLRenderer:Renderer},OrbitControls:Controls,GLTFLoader,MeshoptDecoder,MODEL_DATA,ArrayBuffer,Uint8Array,document,window:{devicePixelRatio:1.25},innerWidth:1440,ResizeObserver:class{observe(){}},requestAnimationFrame(){},atob,performance,setTimeout,console};
 vm.createContext(sandbox);
 let source=await readFile(new URL('../src/main.js',import.meta.url),'utf8');
 source=source.replace(/^import .*;\r?\n/gm,'').replace('load().catch(', 'const loaded=load();loaded.catch(');
@@ -43,8 +47,8 @@ const originalLayout=[
 assert.deepEqual(Array.from(clinic.spaces,r=>[r.id,r.x,r.z,r.w,r.d]),originalLayout,'Elora room positions and dimensions must stay unchanged');
 const assets=clinic.props.children.filter(o=>o.userData.asset);
 assert.ok(assets.length>100,'Detailed room furnishings must load');
-assert.equal(Object.keys(MODEL_DATA).length,56);
-for(const [assetName,roomId] of [['xray_arm','xray'],['xray_viewer','xray'],['autoclave','sterile'],['staff_fridge','staff'],['jaw_model','consult']]){
+assert.equal(Object.keys(MODEL_DATA).length,64);
+for(const [assetName,roomId] of [['xray_arm','xray'],['xray_viewer','xray'],['detail_autoclave','sterile'],['staff_fridge','staff'],['jaw_model','consult'],['detail_receptionist','waiting'],['detail_visitor','waiting'],['detail_waiting_visitor','waiting'],['detail_tv','waiting']]){
  const asset=assets.find(o=>o.name===assetName),room=clinic.spaces.find(r=>r.id===roomId);
  assert.ok(asset&&asset.position.x+9>room.x&&asset.position.x+9<room.x+room.w&&asset.position.z+6>room.z&&asset.position.z+6<room.z+room.d,`${assetName} must be in ${roomId}`);
 }
@@ -65,9 +69,15 @@ assert.deepEqual(crossings,[],'Furniture should stay inside its room');
 for(const [width,height] of [[1100,850],[550,900],[375,450],[1800,650]]){
  Object.assign(size,{width,height});clinic.setView('3d');clinic.resize();
  assert.ok(clinic.scene.fog.near>clinic.camera.position.distanceTo(clinic.control.target),'Responsive framing must not wash out the clinic with fog');
+ const projected=[];
  for(const x of [-9.6,10.2])for(const y of [-.3,3.1])for(const z of [-6.5,6.5]){
   const p=new THREE.Vector3(x,y,z).project(clinic.camera);
+  projected.push(p);
   assert.ok(Math.abs(p.x)<.84&&Math.abs(p.y)<.78,`${width}x${height}: clinic cropped`);
+ }
+ if(width<=850)for(const axis of ['x','y']){
+  const values=projected.map(point=>point[axis]);
+  assert.ok(Math.abs((Math.min(...values)+Math.max(...values))/2)<.02,`${width}x${height}: clinic is off center`);
  }
  clinic.setView('2d');clinic.resize();
  for(const x of [-9.6,10.2])for(const z of [-6.5,6.5]){
