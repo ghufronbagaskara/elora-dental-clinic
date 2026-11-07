@@ -77,7 +77,12 @@ def main():
     with ThreadPoolExecutor(max_workers=7) as pool:
         for fut in as_completed([pool.submit(download, item) for item in selection.items()]):
             credits.append(fut.result())
-    (ROOT / 'ASSET_LICENSES.json').write_text(json.dumps(credits, indent=2))
+    licenses = ROOT / 'ASSET_LICENSES.json'
+    if licenses.exists():
+        existing = json.loads(licenses.read_text(encoding='utf-8'))
+        credits.extend(entry for entry in existing
+                       if entry['file'].startswith('detail_') and (OUT / entry['file']).is_file())
+    licenses.write_text(json.dumps(credits, indent=2), encoding='utf-8')
 
 
 if __name__ == '__main__':

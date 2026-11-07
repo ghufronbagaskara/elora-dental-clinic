@@ -782,5 +782,117 @@
       0.026,
       0.14
     ]
+  },
+  {
+    "file": "detail_reception.glb",
+    "title": "Curved reception desk",
+    "source": "https://www.innerscene.com/tools/library/3d-parts/curved-reception-desk-ac93e59a",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 43700,
+    "triangles": 1946,
+    "sizeMeters": [
+      2.6,
+      1.083,
+      1.144
+    ]
+  },
+  {
+    "file": "detail_task_chair.glb",
+    "title": "Ridge Aluminum Ribbed Task Chair",
+    "source": "https://www.innerscene.com/tools/library/3d-parts/ridge-aluminum-ribbed-task-chair-25fb21c3",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 131304,
+    "triangles": 5206,
+    "sizeMeters": [
+      0.69,
+      1.105,
+      0.752
+    ]
+  },
+  {
+    "file": "detail_receptionist.glb",
+    "title": "Seated office figure",
+    "source": "https://www.innerscene.com/tools/library/3d-parts/seated-office-figure-79182d38",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 473396,
+    "triangles": 27514,
+    "sizeMeters": [
+      0.566,
+      1.359,
+      0.778
+    ]
+  },
+  {
+    "file": "detail_visitor.glb",
+    "title": "Daniel, standing casual figure",
+    "source": "https://www.innerscene.com/tools/library/3d-parts/daniel-3d-person-standing-casual-f788af5a",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 787108,
+    "triangles": 32199,
+    "sizeMeters": [
+      0.659,
+      1.792,
+      0.381
+    ]
+  },
+  {
+    "file": "detail_waiting_visitor.glb",
+    "title": "Taylor, woman seated on chair",
+    "source": "https://www.innerscene.com/tools/library/3d-parts/taylor-3d-person-woman-seated-on-chair-b792e2dc",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 440116,
+    "triangles": 15699,
+    "sizeMeters": [
+      0.498,
+      1.341,
+      0.782
+    ]
+  },
+  {
+    "file": "detail_sofa.glb",
+    "title": "COAST Three-Seat Sofa",
+    "source": "https://www.innerscene.com/tools/library/3d-parts/coast-three-seat-outdoor-sofa-30a2b0e5",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 285744,
+    "triangles": 21000,
+    "sizeMeters": [
+      2.209,
+      0.877,
+      0.945
+    ]
+  },
+  {
+    "file": "detail_tv.glb",
+    "title": "Flat-screen TV 55 inch on a pedestal stand",
+    "source": "https://www.innerscene.com/tools/library/3d-parts/flat-screen-tv-55-inch-on-a-pedestal-stand-44fcc478",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 74320,
+    "triangles": 3440,
+    "sizeMeters": [
+      1.229,
+      0.782,
+      0.25
+    ]
+  },
+  {
+    "file": "detail_autoclave.glb",
+    "title": "Autoclave",
+    "source": "https://www.innerscene.com/tools/library/3d-parts/autoclave-6a9820dc",
+    "license": "CC0 1.0 Universal",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "bytes": 226580,
+    "triangles": 1498,
+    "sizeMeters": [
+      0.493,
+      0.55,
+      0.771
+    ]
   }
 ]
