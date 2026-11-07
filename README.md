@@ -36,6 +36,8 @@ Build menghasilkan `dist/` untuk hosting. Setelah Vite selesai, esbuild memperba
 - Radiografi intraoral: kursi pasien, lengan rontgen di dinding, viewer hasil, sensor di meja, workstation operator, apron, papan, dan AC.
 - Ruang tindakan: instrumen di kabinet, dispenser, hand gel, sharps bin, dan AC.
 - Konsultasi/staf: kursi, komputer, model rahang, loker, kulkas staf, dan ketel.
+- Resepsionis: meja lengkung, kursi kerja, komputer, printer, serta figur petugas dan pengunjung. Ruang tunggu menampilkan sofa, pengunjung duduk, dan TV dengan tampilan antrean ilustratif.
+- Sterilisasi: autoclave dan ultrasonic cleaner berada di atas meja kerja.
 - Toilet/gudang/sterilisasi: perlengkapan sesuai fungsi, menggantikan bentuk placeholder.
 - Matahari hangat miring, ambient dan fill yang lebih lembut, bayangan 2048², serta panel lampu untuk Eye Level.
 - Lantai kayu/tile dan lis dinding; warna dental asli tetap dipertahankan.
@@ -44,7 +46,7 @@ Build menghasilkan `dist/` untuk hosting. Setelah Vite selesai, esbuild memperba
 
 ## Aset
 
-56 GLB dari 3DAssets.dev berlisensi CC0 menurut metadata penerbit. URL, dimensi, jumlah segitiga, dan lisensi tersedia di `ASSET_LICENSES.json`. File GLB asli disimpan dalam `assets/models/`; salinannya tertanam di bundle.
+Proyek menyertakan 56 GLB dari 3DAssets.dev dan delapan GLB detail dari Innerscene yang berlisensi CC0. Tiga figur manusia bersifat statis dan berasal dari model berbasis MakeHuman/MPFB. URL, dimensi, jumlah segitiga, dan lisensi tersedia di `ASSET_LICENSES.json`. File GLB disimpan di `assets/models/` dan tertanam di bundle.
 
 Untuk meregenerasi aset tertanam:
 
