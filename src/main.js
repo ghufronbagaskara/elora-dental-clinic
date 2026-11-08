@@ -217,7 +217,9 @@ function placeAll(){
  for(const r of visibleRooms){const panel=put('ceiling_panel',r.x+r.w/2,r.z+r.d/2,0,1,2.75);overhead.attach(panel);}
 }
 async function load(){const items=Object.entries(MODEL_DATA),total=items.length;let count=0;for(const [key,data] of items){await decode(key,data);count++;document.getElementById('progressBar').style.width=100*count/total+'%';document.getElementById('progressLabel').textContent=`Menyiapkan interior ${count} / ${total}`;if(count%2===0)await new Promise(r=>setTimeout(r,0));}placeAll();sunlight.shadow.needsUpdate=true;needsRender=true;document.getElementById('loader').style.display='none';}
-load().catch(e=>{console.error(e);document.getElementById('progressLabel').textContent='Ada aset yang gagal. Ruang dasar masih bisa dilihat.';setTimeout(()=>document.getElementById('loader').style.display='none',2000);});
+const pngButton=document.getElementById('pngBtn');
+load().catch(e=>{console.error(e);document.getElementById('progressLabel').textContent='Ada aset yang gagal. Ruang dasar masih bisa dilihat.';return new Promise(resolve=>setTimeout(()=>{document.getElementById('loader').style.display='none';resolve();},2000));})
+ .then(()=>{pngButton.disabled=false;});
 function setView(v){control.enableDamping=false;control.update();control.enableDamping=true;view=v;tween=null;document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
  if(v==='2d'){current=planCamera;control.object=planCamera;control.enableRotate=false;planCamera.position.set(0,35,.0001);planCamera.zoom=1;control.target.set(0,0,0);walls.visible=false;}
  else{current=camera;control.object=camera;control.enableRotate=true;camera.zoom=1;if(v==='walk'){camera.position.set(-4.4,1.7,-5.2);control.target.set(-1.4,1.5,1);}else{fitClinic();}walls.visible=true;}
@@ -229,7 +231,47 @@ document.getElementById('wallBtn').onclick=()=>{cutaway=!cutaway;walls.scale.y=c
 walls.scale.y=.27;
 overhead.visible=false;
 document.getElementById('resetBtn').onclick=()=>{hover=null;select(null);setView('3d');};
-document.getElementById('pngBtn').onclick=()=>{renderer.render(scene,current);try{let a=document.createElement('a');a.download='Elora-Smile-Clinic-'+view+'.png';a.href=renderer.domElement.toDataURL('image/png');a.click();}catch(e){console.warn(e);}};
+let screenshotNotice;
+pngButton.onclick=()=>{
+ const toast=document.getElementById('toast');
+ clearTimeout(screenshotNotice);
+ toast.style.display='none';
+ try{
+  const source=renderer.domElement;
+  if(renderer.getContext().isContextLost())throw new Error('WebGL context lost');
+  renderView();
+  let output=source;
+  if(view==='2d'){
+   output=document.createElement('canvas');
+   output.width=source.width;
+   output.height=source.height;
+   const ctx=output.getContext('2d');
+   ctx.drawImage(source,0,0);
+   const viewport=source.getBoundingClientRect();
+   ctx.scale(output.width/viewport.width,output.height/viewport.height);
+   ctx.textAlign='center';
+   ctx.textBaseline='middle';
+   ctx.shadowColor='#fff';
+   ctx.shadowBlur=3;
+   for(const label of labels.values()){
+    const bounds=label.getBoundingClientRect(),style=getComputedStyle(label);
+    ctx.fillStyle=style.color;
+    ctx.font=`${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
+    ctx.fillText(label.textContent,bounds.left+bounds.width/2-viewport.left,bounds.top+bounds.height/2-viewport.top);
+   }
+  }
+  const link=document.createElement('a');
+  link.download='Elora-Smile-Clinic-'+view+'.png';
+  link.href=output.toDataURL('image/png');
+  if(link.href==='data:,')throw new Error('Empty screenshot');
+  link.click();
+ }catch(error){
+  console.warn('Elora: screenshot failed.',error);
+  toast.textContent='Screenshot failed. Try again.';
+  toast.style.display='block';
+  screenshotNotice=setTimeout(()=>{toast.style.display='none';},4000);
+ }
+};
 const ray=new THREE.Raycaster(),mouse=new THREE.Vector2();
 function pick(e){let r=renderer.domElement.getBoundingClientRect();mouse.set(2*(e.clientX-r.left)/r.width-1,1-2*(e.clientY-r.top)/r.height);ray.setFromCamera(mouse,current);let intersects=ray.intersectObjects(colliders);return intersects[0]?.object.userData.room||null;}
 let down=null;
@@ -281,9 +323,10 @@ function resize(){
 }
 new ResizeObserver(resize).observe(root);resize();
 const p=new THREE.Vector3();
-function frame(now){requestAnimationFrame(frame);if(tween){needsRender=true;let t=Math.min((now-tween.start)/770,1);t=1-Math.pow(1-t,3);camera.position.lerpVectors(tween.a,tween.b,t);control.target.lerpVectors(tween.ta,tween.tb,t);if(t===1)tween=null;}control.update();if(!needsRender)return;
- for(const r of visibleRooms){let n=labels.get(r.id);if(view!=='2d'){n.style.display='none';continue;}p.copy(P(r.x+r.w/2,r.z+r.d/2,.16)).project(current);n.style.display='block';n.style.left=(p.x*.5+.5)*root.clientWidth+'px';n.style.top=(-p.y*.5+.5)*root.clientHeight+'px';}
+function renderView(){
  renderer.render(scene,current);
+ for(const r of visibleRooms){let n=labels.get(r.id);if(view!=='2d'){n.style.display='none';continue;}p.copy(P(r.x+r.w/2,r.z+r.d/2,.16)).project(current);n.style.display='block';n.style.left=(p.x*.5+.5)*root.clientWidth+'px';n.style.top=(-p.y*.5+.5)*root.clientHeight+'px';}
  needsRender=false;
 }
+function frame(now){requestAnimationFrame(frame);if(tween){needsRender=true;let t=Math.min((now-tween.start)/770,1);t=1-Math.pow(1-t,3);camera.position.lerpVectors(tween.a,tween.b,t);control.target.lerpVectors(tween.ta,tween.tb,t);if(t===1)tween=null;}control.update();if(needsRender)renderView();}
 requestAnimationFrame(frame);
