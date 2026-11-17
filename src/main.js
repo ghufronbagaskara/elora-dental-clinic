@@ -6,6 +6,7 @@ import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
 import {MODEL_DATA} from './embedded-assets.js';
 import {SPACES,ROOMS,OPENINGS,wallById} from './clinic-data.js';
 import {buildArchitecture} from './architecture.js';
+import {mountFloorPlan} from './floorplan.js';
 
 // All geometry is in metres; the layout records live in clinic-data.js and feed the 3D model and the 2D plan.
 const spaces=SPACES;
@@ -70,7 +71,7 @@ const colliders=[];
 for(const r of spaces){const o=new THREE.Mesh(new THREE.PlaneGeometry(r.w-.15,r.d-.15),new THREE.MeshBasicMaterial({visible:false,side:THREE.DoubleSide}));o.rotation.x=-Math.PI/2;o.position.copy(P(r.x+r.w/2,r.z+r.d/2,.156));o.userData.room=r.id;scene.add(o);colliders.push(o);}
 const roomList=document.getElementById('roomList');
 for(let i=0;i<visibleRooms.length;i++){let r=visibleRooms[i],b=document.createElement('button');b.className='room';b.dataset.id=r.id;b.innerHTML=`<span class="dot" style="background:${r.color};border:1px solid #bfd0c2"></span><span>${r.name}</span><span class="num">${String(i+1).padStart(2,'0')}</span>`;b.onclick=()=>select(r.id,true);roomList.appendChild(b);}
-let current=camera,view='3d',selected=null,hover=null,cutaway=true,roofOn=true,tween=null;
+let current=camera,view='3d',selected=null,hover=null,cutaway=true,roofOn=true,tween=null,plan=null;
 const labels=new Map();
 for(const r of visibleRooms){let e=document.createElement('div');e.className='room-label';e.textContent=r.name;root.appendChild(e);labels.set(r.id,e);}
 function updateFloor(){needsRender=true;for(const r of spaces){floorMats.get(r.id).color.set(r.id===selected?'#f7d4a5':r.id===hover?'#fff0d8':'#ffffff');}}
@@ -81,6 +82,7 @@ function select(id,zoom=false){
  document.getElementById('detailTitle').textContent=room?room.name:'Explore the clinic';
  document.getElementById('detailText').textContent=room?room.info:'Pilih ruangan dari daftar atau klik langsung pada lantai model.';
  updateFloor();
+ plan?.setActive(id);
  // Looking into a room needs the roof off and the cutaway walls back.
  if(room&&roofOn&&(view==='3d'||view==='walk')){roofOn=false;cutaway=view!=='walk';applyShell();}
  if(zoom&&room&&view==='walk'){
@@ -93,7 +95,7 @@ function select(id,zoom=false){
   tween={start:performance.now(),a:camera.position.clone(),b:eye,ta:control.target.clone(),tb:look};
   return;
  }
- if(zoom&&room&&view!=='2d'){
+ if(zoom&&room&&view!=='2d'&&view!=='plan'){
   const target=P(room.x+room.w/2,room.z+room.d/2,.5);
   const offset=room.id==='waiting'&&view==='3d'
    ? new THREE.Vector3(5.4,7.4,-8.2)
@@ -212,15 +214,15 @@ async function load(){const items=Object.entries(MODEL_DATA),total=items.length;
 const pngButton=document.getElementById('pngBtn');
 load().catch(e=>{console.error(e);document.getElementById('progressLabel').textContent='Ada aset yang gagal. Ruang dasar masih bisa dilihat.';return new Promise(resolve=>setTimeout(()=>{document.getElementById('loader').style.display='none';resolve();},2000));})
  .then(()=>{pngButton.disabled=false;applyHash();});
-// Shareable state: #view=3d|2d|walk&room=unit1&roof=0
+// Shareable state: #view=plan|3d|2d|walk&room=unit1&roof=0
 function applyHash(){
  const q=new URLSearchParams(location.hash.slice(1));if(![...q.keys()].length)return;
  if(q.get('roof')==='0'){roofOn=false;applyShell();}
- const v=q.get('view');if(['3d','2d','walk'].includes(v))setView(v);
+ const v=q.get('view');if(['3d','2d','walk','plan'].includes(v))setView(v);
  if(roomById.has(q.get('room')))select(q.get('room'),true);
 }
 addEventListener('hashchange',applyHash);
-const wallButton=document.getElementById('wallBtn'),roofButton=document.getElementById('roofBtn');
+const wallButton=document.getElementById('wallBtn'),roofButton=document.getElementById('roofBtn'),planView=document.getElementById('planView');
 // Roof on shows the whole building; roof off falls back to the cutaway or full-wall choice.
 function applyShell(){
  const full=roofOn||!cutaway;
@@ -231,7 +233,21 @@ function applyShell(){
  roofButton.textContent=roofOn?'⌂ Atap: tampil':'⌂ Atap: sembunyi';
  sunlight.shadow.needsUpdate=true;needsRender=true;
 }
+function ensurePlan(){
+ if(plan)return plan;
+ plan=mountFloorPlan(document.getElementById('planCanvas'),{info:document.getElementById('planInfo'),onSelect:id=>select(id)});
+ new ResizeObserver(()=>{if(view==='plan')plan.render();}).observe(planView);
+ document.getElementById('planReset').onclick=()=>plan.reset();
+ document.getElementById('planPng').onclick=async()=>{
+  const button=document.getElementById('planPng');button.disabled=true;
+  try{await plan.downloadPNG();}catch(error){console.warn('Elora: plan export failed.',error);toastMessage('Unduh PNG gagal. Coba lagi.');}
+  finally{button.disabled=false;}
+ };
+ return plan;
+}
 function setView(v){control.enableDamping=false;control.update();control.enableDamping=true;view=v;tween=null;document.querySelectorAll('[data-view]').forEach(b=>{b.classList.toggle('active',b.dataset.view===v);b.setAttribute('aria-pressed',String(b.dataset.view===v));});
+ planView.hidden=v!=='plan';
+ if(v==='plan'){const p=ensurePlan();p.render();p.setActive(selected);document.getElementById('viewHint').textContent='Denah 2D · Gulir atau pinch untuk zoom';return;}
  if(v==='2d'){current=planCamera;control.object=planCamera;control.enableRotate=false;planCamera.position.set(0,35,.0001);planCamera.zoom=1;control.target.set(0,0,0);walls.visible=false;}
  else{current=camera;control.object=camera;control.enableRotate=true;camera.zoom=1;camera.fov=v==='walk'?56:38;camera.updateProjectionMatrix();if(v==='walk'){roofOn=false;cutaway=false;camera.position.set(-4.4,1.7,-5.2);control.target.set(-1.4,1.5,1);}else{if(!selected){roofOn=true;cutaway=true;}fitClinic();}walls.visible=true;}
  overhead.visible=v==='walk';applyShell();
@@ -343,6 +359,6 @@ function renderView(){
  for(const r of visibleRooms){let n=labels.get(r.id);if(view!=='2d'){n.style.display='none';continue;}p.copy(P(r.x+r.w/2,r.z+r.d/2,.16)).project(current);n.style.display='block';n.style.left=(p.x*.5+.5)*root.clientWidth+'px';n.style.top=(-p.y*.5+.5)*root.clientHeight+'px';}
  needsRender=false;
 }
-function frame(now){requestAnimationFrame(frame);if(tween){needsRender=true;let t=Math.min((now-tween.start)/770,1);t=1-Math.pow(1-t,3);camera.position.lerpVectors(tween.a,tween.b,t);control.target.lerpVectors(tween.ta,tween.tb,t);if(t===1)tween=null;}control.update();if(needsRender)renderView();}
+function frame(now){requestAnimationFrame(frame);if(view==='plan')return;if(tween){needsRender=true;let t=Math.min((now-tween.start)/770,1);t=1-Math.pow(1-t,3);camera.position.lerpVectors(tween.a,tween.b,t);control.target.lerpVectors(tween.ta,tween.tb,t);if(t===1)tween=null;}control.update();if(needsRender)renderView();}
 requestAnimationFrame(frame);
-window.__elora={renderer,scene,setView,select,shell};
+window.__elora={renderer,scene,setView,select,shell,get plan(){return plan;}};
