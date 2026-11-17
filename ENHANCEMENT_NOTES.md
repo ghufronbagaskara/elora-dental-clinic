@@ -36,3 +36,11 @@ Unduhan PNG melalui dialog browser dan benchmark FPS belum diperiksa pada sesi i
 
 
 Pemeriksaan mobile 390 × 844 juga lolos: tidak ada overflow horizontal, logo termuat, dan kanvas sesuai panel. Jarak fog disesuaikan dengan framing kamera agar model tidak pudar ketika kamera menjauh pada layar sempit. Screenshot mobile diperbarui.
+
+## Upgrade November 2026
+
+Fasad diberi jendela kaca berkusen, pintu kaca ganda + kanopi, signage ELORA, atap datar berparapet dengan unit AC (tombol Atap), serta tapak: plaza paving, jalan akses, parkir 5 petak + 1 difabel, parkir motor, zebra cross, bedeng tanaman, pohon, lampu taman, pagar. Ruang diberi signage, poster, jam, tanaman pot. Mode **Denah 2D** (SVG dari data ruang yang sama dengan 3D, `src/clinic-data.js`) lengkap dengan dimensi, legenda zona, panah utara, skala, dan unduh PNG 4000 px.
+
+Bayangan matahari tetap satu shadow map 2048², kini menutup seluruh tapak (±23 m). Tombol **☀ Bayangan** mematikan/menyalakan bayangan; slider jam menggeser matahari 07.00–17.00. Bayangan dihitung ulang hanya saat matahari, dinding, atau toggle berubah.
+
+Hasil `npm test`: 956 mesh, 244.302 segitiga (sebelumnya 960 mesh, 130.564 segitiga). Bundle Vite 6,8 MB (3,26 MB gzip); `app.bundle.js` 6,5 MB. Konsol browser hanya menampilkan warning compiler shader ANGLE (X4122), bukan error.
