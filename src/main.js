@@ -24,7 +24,7 @@ root.appendChild(renderer.domElement);
 renderer.domElement.id='scene';
 const scene=new THREE.Scene();scene.background=new THREE.Color('#e7eee8');scene.fog=new THREE.Fog('#e7eee8',35,90);
 scene.add(new THREE.HemisphereLight('#fff8ed','#9aa998',.85));
-const sunlight=new THREE.DirectionalLight('#ffdfad',3.5);sunlight.position.set(-14,12,-10);sunlight.castShadow=true;sunlight.shadow.mapSize.set(2048,2048);sunlight.shadow.camera.left=-20;sunlight.shadow.camera.right=20;sunlight.shadow.camera.top=18;sunlight.shadow.camera.bottom=-18;sunlight.shadow.camera.near=1;sunlight.shadow.camera.far=64;sunlight.shadow.normalBias=.018;scene.add(sunlight);
+const sunlight=new THREE.DirectionalLight('#ffdfad',3.5);sunlight.position.set(-14,12,-10);sunlight.castShadow=true;sunlight.shadow.mapSize.set(2048,2048);sunlight.shadow.camera.left=-23;sunlight.shadow.camera.right=23;sunlight.shadow.camera.top=23;sunlight.shadow.camera.bottom=-23;sunlight.shadow.camera.near=1;sunlight.shadow.camera.far=80;sunlight.shadow.normalBias=.018;scene.add(sunlight);
 sunlight.shadow.bias=-.00015;sunlight.shadow.autoUpdate=false;sunlight.shadow.needsUpdate=true;
 const fillLight=new THREE.DirectionalLight('#dbeaff',.35);fillLight.position.set(12,9,8);scene.add(fillLight);
 const camera=new THREE.PerspectiveCamera(38,1,.09,150);camera.position.set(23,23,25);
@@ -218,6 +218,8 @@ load().catch(e=>{console.error(e);document.getElementById('progressLabel').textC
 function applyHash(){
  const q=new URLSearchParams(location.hash.slice(1));if(![...q.keys()].length)return;
  if(q.get('roof')==='0'){roofOn=false;applyShell();}
+ if(q.get('shadow')==='0'){shadowsOn=false;applyShadows();}
+ if(q.has('sun')){sunInput.value=q.get('sun');setSun(+sunInput.value);}
  const v=q.get('view');if(['3d','2d','walk','plan'].includes(v))setView(v);
  if(roomById.has(q.get('room')))select(q.get('room'),true);
 }
@@ -256,6 +258,27 @@ function setView(v){control.enableDamping=false;control.update();control.enableD
 document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>setView(b.dataset.view));
 wallButton.onclick=()=>{if(roofOn||!cutaway){roofOn=false;cutaway=true;}else cutaway=false;applyShell();};
 roofButton.onclick=()=>{roofOn=!roofOn;if(roofOn&&selected)select(null);applyShell();};
+// Sun over the whole lot (scene centre of the site ≈ z −6). Plan north = +z, east = −x;
+// the arc leans south as it does around 6° LS in the wet season, so the facade is lit.
+const sunTarget=new THREE.Object3D();sunTarget.position.set(0,0,-6);scene.add(sunTarget);sunlight.target=sunTarget;
+const sunWarm=new THREE.Color('#ffdfad'),sunLow=new THREE.Color('#ffb36b'),shadowButton=document.getElementById('shadowBtn'),sunInput=document.getElementById('sunHour');
+let shadowsOn=true;
+function setSun(hour){
+ const H=(hour-12)*Math.PI/12,tilt=.35,up=Math.cos(H)*Math.cos(tilt);
+ sunlight.position.set(Math.sin(H)*30,up*30,-Math.cos(H)*Math.sin(tilt)*30).add(sunTarget.position);
+ sunlight.intensity=3.5*Math.min(1,.4+up);sunlight.color.copy(sunWarm).lerp(sunLow,Math.max(0,1-up*1.8));
+ const h=Math.floor(hour),mm=Math.round((hour-h)*60);
+ document.getElementById('sunLabel').textContent=`${String(h).padStart(2,'0')}.${String(mm).padStart(2,'0')}`;
+ sunlight.shadow.needsUpdate=true;needsRender=true;
+}
+function applyShadows(){
+ sunlight.castShadow=shadowsOn;sunInput.disabled=!shadowsOn;document.getElementById('sunCtl').setAttribute('aria-disabled',String(!shadowsOn));
+ shadowButton.setAttribute('aria-pressed',String(shadowsOn));shadowButton.textContent=shadowsOn?'☀ Bayangan: aktif':'☀ Bayangan: mati';
+ sunlight.shadow.needsUpdate=true;needsRender=true;
+}
+shadowButton.onclick=()=>{shadowsOn=!shadowsOn;applyShadows();};
+sunInput.oninput=()=>setSun(+sunInput.value);
+setSun(+sunInput.value);applyShadows();
 overhead.visible=false;
 applyShell();
 document.getElementById('resetBtn').onclick=()=>{hover=null;select(null);roofOn=true;cutaway=true;setView('3d');};

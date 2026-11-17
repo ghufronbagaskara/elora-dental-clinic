@@ -15,6 +15,7 @@
     #pngBtn{min-height:44px}
     .control-tabs{grid-template-columns:1fr 1fr}
     .tool[aria-pressed="true"]{background:#e2efe6;border-color:#b8d2c1;color:#1d4a39}
+    .sun{display:inline-flex;align-items:center;gap:8px;cursor:default}.sun span{font-variant-numeric:tabular-nums;min-width:34px}.sun input{width:96px;accent-color:#739787;margin:0}.sun[aria-disabled="true"]{opacity:.55}
     .plan{position:absolute;inset:0;z-index:3;display:flex;flex-direction:column;background:#fbfcfa}.plan[hidden]{display:none}
     .plan-bar{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;padding:20px 24px 10px;flex-wrap:wrap}
     .plan-head strong{display:block;color:#294537;font-size:13px;letter-spacing:.06em}.plan-head small{display:block;font-size:11px;color:#5d7266;margin-top:5px}
@@ -44,7 +45,7 @@
     </aside>
     <main class="main" id="stage">
       <div class="viewport" id="viewport"></div>
-      <div class="topbar"><div class="toplabel"><strong>ELORA — INTERIOR EXPLORER</strong><small id="viewHint">Drag to orbit · Scroll to zoom · Click to inspect</small></div><div class="toolbar"><button type="button" class="tool" id="roofBtn" aria-pressed="true">⌂ Atap: tampil</button><button class="tool" id="wallBtn">▣ Full walls</button><button class="tool" id="resetBtn">↺ Reset</button><button type="button" class="tool" id="pngBtn" disabled>↓ Screenshot</button></div></div>
+      <div class="topbar"><div class="toplabel"><strong>ELORA — INTERIOR EXPLORER</strong><small id="viewHint">Drag to orbit · Scroll to zoom · Click to inspect</small></div><div class="toolbar"><button type="button" class="tool" id="roofBtn" aria-pressed="true">⌂ Atap: tampil</button><button type="button" class="tool" id="shadowBtn" aria-pressed="true">☀ Bayangan: aktif</button><label class="tool sun" id="sunCtl" for="sunHour"><span id="sunLabel">09.00</span><input type="range" id="sunHour" min="7" max="17" step="0.25" value="9" aria-label="Jam posisi matahari"></label><button class="tool" id="wallBtn">▣ Full walls</button><button class="tool" id="resetBtn">↺ Reset</button><button type="button" class="tool" id="pngBtn" disabled>↓ Screenshot</button></div></div>
       <div class="bottom"><div class="bottom-note" id="bottomNote">Detail dental · Cahaya alami · Model 3D interaktif</div></div>
       <div class="loader" id="loader"><strong>Curating your space.</strong><p id="progressLabel">Preparing detailed 3D interiors…</p><div class="track"><div class="fill" id="progressBar"></div></div></div>
       <section class="plan" id="planView" hidden aria-label="Denah 2D">
