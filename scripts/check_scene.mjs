@@ -5,6 +5,8 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
 import {MODEL_DATA} from '../src/embedded-assets.js';
+import * as data from '../src/clinic-data.js';
+import {buildPlanSVG,PLAN_LAYOUTS} from '../src/floorplan.js';
 
 // Real geometry and GLB parsing; DOM/WebGL stand-ins keep this check runnable without a browser.
 const size={width:1100,height:850};
@@ -13,7 +15,7 @@ globalThis.self=globalThis;
 globalThis.createImageBitmap=async()=>({width:1,height:1,close(){}});
 const context2d=new Proxy({}, {get:()=>()=>{}});
 const elements=new Map();
-function element(){return {style:{},dataset:{},children:[],listeners:{},open:false,classList:{toggle(){}},appendChild(child){this.children.push(child);},querySelectorAll(){return this.children;},addEventListener(type,handler){(this.listeners[type]??=[]).push(handler);},showModal(){this.open=true;},close(){this.open=false;this.listeners.close?.forEach(handler=>handler());},getBoundingClientRect:()=>size,getContext:()=>context2d};}
+function element(){return {style:{},dataset:{},children:[],listeners:{},attributes:{},open:false,classList:{toggle(){}},setAttribute(name,value){this.attributes[name]=value;},appendChild(child){this.children.push(child);},querySelectorAll(){return this.children;},addEventListener(type,handler){(this.listeners[type]??=[]).push(handler);},showModal(){this.open=true;},close(){this.open=false;this.listeners.close?.forEach(handler=>handler());},getBoundingClientRect:()=>size,getContext:()=>context2d};}
 const document={getElementById(id){if(!elements.has(id))elements.set(id,element());return elements.get(id);},createElement:element,querySelectorAll:()=>[]};
 let renders=0;
 class Renderer{
@@ -24,11 +26,16 @@ class Controls extends THREE.EventDispatcher{
  constructor(camera){super();this.object=camera;this.target=new THREE.Vector3();}
  update(){this.object.lookAt(this.target);this.object.updateMatrixWorld(true);}
 }
-const sandbox={THREE:{...THREE,WebGLRenderer:Renderer},OrbitControls:Controls,GLTFLoader,MeshoptDecoder,MODEL_DATA,ArrayBuffer,Uint8Array,document,window:{devicePixelRatio:1.25},innerWidth:1440,ResizeObserver:class{observe(){}},requestAnimationFrame(){},atob,performance,setTimeout,console};
-vm.createContext(sandbox);
+const sandbox={THREE:{...THREE,WebGLRenderer:Renderer},ArrayBuffer,Uint8Array,document,window:{devicePixelRatio:1.25},innerWidth:1440,ResizeObserver:class{observe(){}},requestAnimationFrame(){},addEventListener(){},location:{hash:''},URLSearchParams,atob,performance,setTimeout,clearTimeout,console};
 let source=await readFile(new URL('../src/main.js',import.meta.url),'utf8');
+// Resolve main.js's named imports with the real modules; only WebGL and the DOM are stubbed.
+for(const [,names,from] of source.matchAll(/^import \{([^}]+)\} from '([^']+)';/gm)){
+ const mod=await import(from.startsWith('.')?new URL('../src/'+from.slice(2),import.meta.url).href:from);
+ for(const name of names.split(',').map(n=>n.trim()))sandbox[name]=name==='OrbitControls'?Controls:mod[name];
+}
+vm.createContext(sandbox);
 source=source.replace(/^import .*;\r?\n/gm,'').replace('load().catch(', 'const loaded=load();loaded.catch(');
-vm.runInContext(source+'\nglobalThis.clinic={loaded,scene,props,spaces,camera,planCamera,control,setView,resize,select,frame,sunlight};',sandbox);
+vm.runInContext(source+'\nglobalThis.clinic={loaded,scene,props,spaces,camera,planCamera,control,setView,resize,select,frame,sunlight,shell,state:()=>({roofOn,cutaway,view})};',sandbox);
 const clinic=sandbox.clinic;
 await clinic.loaded;
 const canvas=document.getElementById('viewport').children[0];
@@ -70,7 +77,7 @@ for(const [width,height] of [[1100,850],[550,900],[375,450],[1800,650]]){
  Object.assign(size,{width,height});clinic.setView('3d');clinic.resize();
  assert.ok(clinic.scene.fog.near>clinic.camera.position.distanceTo(clinic.control.target),'Responsive framing must not wash out the clinic with fog');
  const projected=[];
- for(const x of [-9.6,10.2])for(const y of [-.3,3.1])for(const z of [-6.5,6.5]){
+ for(const x of [-9.6,10.2])for(const y of [-.3,3.6])for(const z of [-11,6.5]){
   const p=new THREE.Vector3(x,y,z).project(clinic.camera);
   projected.push(p);
   assert.ok(Math.abs(p.x)<.84&&Math.abs(p.y)<.78,`${width}x${height}: clinic cropped`);
@@ -86,7 +93,14 @@ for(const [width,height] of [[1100,850],[550,900],[375,450],[1800,650]]){
  }
  clinic.planCamera.zoom=3;clinic.setView('2d');assert.equal(clinic.planCamera.zoom,1);
 }
-clinic.setView('walk');assert.ok(clinic.camera.position.y<2);
+clinic.setView('3d');
+assert.ok(clinic.shell.roof.visible&&clinic.shell.full.visible&&!clinic.shell.cut.visible,'Default 3D view shows the whole building with its roof');
+document.getElementById('roofBtn').onclick();
+assert.ok(!clinic.shell.roof.visible&&clinic.shell.cut.visible,'Roof off returns to the cutaway');
+document.getElementById('roofBtn').onclick();assert.ok(clinic.shell.roof.visible);
+clinic.select('unit2');assert.ok(!clinic.shell.roof.visible,'Selecting a room hides the roof');
+document.getElementById('resetBtn').onclick();assert.ok(clinic.shell.roof.visible);
+clinic.setView('walk');assert.ok(clinic.camera.position.y<2);assert.ok(!clinic.shell.roof.visible,'Eye Level hides the roof');
 clinic.select('xray',true);clinic.frame(performance.now()+900);
 assert.equal(document.getElementById('detailTitle').textContent,'Radiografi');
 document.getElementById('resetBtn').onclick();
@@ -95,6 +109,44 @@ clinic.frame(performance.now()+1000);const rendered=renders;clinic.frame(perform
 assert.equal(renders,rendered,'Idle scene must not render continuously');
 const lights=[];clinic.scene.traverse(o=>{if(o.isLight&&o.castShadow)lights.push(o);});
 assert.equal(lights.length,1,'Only sunlight should allocate a shadow map');
+// Shadow toggle frees the shadow map; the sun slider moves the light east→west.
+const sun=lights[0],shadowBtn=document.getElementById('shadowBtn'),sunHour=document.getElementById('sunHour');
+shadowBtn.onclick();assert.equal(sun.castShadow,false,'Shadow toggle must turn sun shadows off');assert.equal(sunHour.disabled,true);
+shadowBtn.onclick();assert.equal(sun.castShadow,true);
+sunHour.value='8';sunHour.oninput();const morningX=sun.position.x;sunHour.value='16';sunHour.oninput();
+assert.ok(morningX<sun.target.position.x&&sun.position.x>sun.target.position.x,'Morning sun east (−x), afternoon west (+x)');
+assert.ok(sun.position.y>sun.target.position.y,'Sun stays above the horizon');
+sunHour.value='9';sunHour.oninput();
+// Exterior windows are real openings: no full-shell wall piece crosses the glazing band.
+const exteriorWindows=data.OPENINGS.filter(o=>o.type==='window'&&data.wallById.get(o.wall).ext);
+assert.ok(exteriorWindows.length>=8,'Exterior walls need windows');
+for(const side of ['front','back','left','right'])assert.ok(data.OPENINGS.some(o=>o.wall===side&&o.type!=='open'),`${side} facade needs an opening`);
+for(const op of exteriorWindows){
+ const blocking=clinic.shell.segments.filter(s=>s.wall===op.wall&&s.from<op.to-1e-6&&s.to>op.from+1e-6&&s.y0<op.head-1e-6&&s.y1>op.sill+1e-6);
+ assert.deepEqual(blocking,[],`Window ${op.wall} ${op.from}-${op.to} must be open in the wall`);
+}
+const glassMeshes=[];clinic.shell.full.traverse(o=>{if(o.isMesh&&o.material.transparent)glassMeshes.push(o);});
+assert.ok(glassMeshes.length>=1,'Windows need glass');
+for(const op of data.OPENINGS){const w=data.wallById.get(op.wall);assert.ok(op.from>=w.from&&op.to<=w.to&&op.to>op.from,`Opening ${op.wall} ${op.from} lies on its wall`);}
+// The 2D plan reads the same records as the 3D model.
+assert.equal(clinic.spaces,data.SPACES,'3D and plan share one room table');
+for(const layout of Object.keys(PLAN_LAYOUTS)){
+ const svg=buildPlanSVG({layout});
+ const rooms=[...svg.matchAll(/data-room="([^"]+)"[^>]*data-x="([^"]+)" data-z="([^"]+)" data-w="([^"]+)" data-d="([^"]+)"/g)].map(m=>[m[1],+m[2],+m[3],+m[4],+m[5]]);
+ assert.deepEqual(rooms,clinic.spaces.filter(r=>!r.id.includes('hall')).map(r=>[r.id,r.x,r.z,r.w,r.d]),'Plan rooms match the 3D rooms');
+ for(const r of data.ROOMS){const [w,d]=data.netSize(r);assert.ok(svg.includes(`${data.fmt(w)} × ${data.fmt(d)} m`),`${r.id} interior size label`);}
+ for(const side of ['front','back','left','right']){
+  const group=svg.match(new RegExp(`<g class="fp-dim" data-dim="${side}" data-total="([^"]+)">([\\s\\S]*?)</g>`));
+  assert.ok(group,`${side} dimension chain`);
+  const expected=side==='front'||side==='back'?data.BUILDING.width:data.BUILDING.depth;
+  assert.equal(+group[1],expected,`${side} total equals the building size`);
+  const parts=[...group[2].matchAll(/class="fp-dim-text" data-len="([^"]+)"/g)].map(m=>+m[1]);
+  assert.ok(parts.length>=2&&Math.abs(parts.reduce((a,b)=>a+b,0)-expected)<1e-6,`${side} segments add up to the total`);
+  assert.match(group[2],new RegExp(`class="fp-dim-text fp-total" data-len="${expected.toFixed(2)}"[^>]*>${data.fmt(expected)}<`));
+ }
+ assert.equal((svg.match(/class="fp-swing"/g)||[]).length,data.OPENINGS.filter(o=>['door','exit'].includes(o.type)).length+2+1,'Every leaf has a swing arc');
+ assert.match(svg,/MASUK/);assert.match(svg,/SKALA GRAFIS/);assert.match(svg,/Denah Lantai/);
+}
 let triangles=0,meshes=0;
 clinic.scene.traverse(o=>{if(o.isMesh){meshes++;triangles+=(o.geometry.index?.count??o.geometry.attributes.position.count)/3;}});
 const models=await readdir(new URL('../assets/models/',import.meta.url));
