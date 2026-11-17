@@ -13,6 +13,8 @@
     .monogram{background:#f0f5f0;overflow:hidden}.monogram img{width:60px;height:60px;object-fit:contain;max-width:none}
     .room-label{white-space:nowrap}
     #pngBtn{min-height:44px}
+    .control-tabs{grid-template-columns:1fr 1fr}
+    .tool[aria-pressed="true"]{background:#e2efe6;border-color:#b8d2c1;color:#1d4a39}
   </style>
 </head>
 <body>
@@ -23,7 +25,7 @@
       <div class="eyebrow">AN IMMERSIVE SPATIAL STUDY</div>
       <h1 class="headline">Designed<br/>for comfort.</h1>
       <div class="intro">Eksplorasi 3D klinik gigi dengan interior Scandinavian yang tenang, detail dental equipment, dan tata ruang yang terkoordinasi.</div>
-      <div class="control-tabs" role="group" aria-label="Mode kamera"><button data-view="3d" class="active">◇ 3D Orbit</button><button data-view="2d">▦ Floor Plan</button><button data-view="walk">◉ Eye Level</button></div>
+      <div class="control-tabs" role="group" aria-label="Mode kamera"><button data-view="3d" class="active" aria-pressed="true">◇ 3D Orbit</button><button data-view="2d" aria-pressed="false">▦ Floor Plan</button><button data-view="walk" aria-pressed="false">◉ Eye Level</button></div>
       <div class="eyebrow" style="margin:4px 0 9px">ROOM DIRECTORY <span id="count" style="float:right">10 SPACES</span></div>
       <div class="rooms" id="roomList"></div>
       <div class="details" aria-live="polite"><strong id="detailTitle">Explore the clinic</strong><p id="detailText">Pilih ruangan dari daftar atau klik langsung pada lantai model.</p></div>
@@ -32,12 +34,12 @@
     </aside>
     <main class="main" id="stage">
       <div class="viewport" id="viewport"></div>
-      <div class="topbar"><div class="toplabel"><strong>ELORA — INTERIOR EXPLORER</strong><small id="viewHint">Drag to orbit · Scroll to zoom · Click to inspect</small></div><div class="toolbar"><button class="tool" id="wallBtn">◧ Cutaway walls</button><button class="tool" id="resetBtn">↺ Reset</button><button type="button" class="tool" id="pngBtn" disabled>↓ Screenshot</button></div></div>
+      <div class="topbar"><div class="toplabel"><strong>ELORA — INTERIOR EXPLORER</strong><small id="viewHint">Drag to orbit · Scroll to zoom · Click to inspect</small></div><div class="toolbar"><button type="button" class="tool" id="roofBtn" aria-pressed="true">⌂ Atap: tampil</button><button class="tool" id="wallBtn">▣ Full walls</button><button class="tool" id="resetBtn">↺ Reset</button><button type="button" class="tool" id="pngBtn" disabled>↓ Screenshot</button></div></div>
       <div class="bottom"><div class="bottom-note" id="bottomNote">Detail dental · Cahaya alami · Model 3D interaktif</div></div>
       <div class="loader" id="loader"><strong>Curating your space.</strong><p id="progressLabel">Preparing detailed 3D interiors…</p><div class="track"><div class="fill" id="progressBar"></div></div></div>
       <div class="toast" id="toast" role="status"></div><div class="unsupported" id="unsupported"><div><strong>WebGL diperlukan</strong><p>Browser ini tidak dapat membuka renderer 3D. Gunakan Chrome, Edge, atau Safari dengan akselerasi grafis diaktifkan.</p></div></div>
     </main>
   </div>
-  <script src="app.bundle.js?v=elora-screenshot"></script>
+  <script src="app.bundle.js?v=elora-site-plan"></script>
 </body>
 </html>

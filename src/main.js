@@ -2,24 +2,14 @@ import * as THREE from 'three';
 import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
 import {MeshoptDecoder} from 'three/addons/libs/meshopt_decoder.module.js';
+import {RoomEnvironment} from 'three/addons/environments/RoomEnvironment.js';
 import {MODEL_DATA} from './embedded-assets.js';
+import {SPACES,ROOMS,OPENINGS,wallById} from './clinic-data.js';
+import {buildArchitecture} from './architecture.js';
 
-// All geometry is in metres: width = 18m, length = 12m, height = 2.8m.
-const spaces = [
- ['waiting','Resepsionis & Ruang Tunggu',0,0,8,3.5,'#ebe2d6','Meja pendaftaran dengan workstation dan kursi petugas. Area tunggu dilengkapi sofa, kursi, TV antrean, dispenser, dan sudut bermain anak.'],
- ['consult','Ruang Konsultasi',8,0,4,3.5,'#ece2d6','Meja dokter, komputer, kursi pasien dan pendamping, model rahang untuk edukasi, serta lemari berkas.'],
- ['staff','Ruang Staf',12,0,4,3.5,'#e6e9df','Area kerja serta istirahat staf; terpisah dari ruang tindakan.'],
- ['wc','Toilet',16,0,2,3.5,'#dce9e6','Toilet konseptual. Detail aksesibilitas, sanitasi, dan plumbing perlu diverifikasi.'],
- ['hall','Koridor Utama',0,3.5,18,1.5,'#f1eadf','Akses dari ruang tunggu menuju ruang klinis.'],
- ['unit1','Ruang Tindakan 1',0,5,6,3.5,'#deece7','Dental chair, lampu tindakan, dental delivery, suction, kabinet, dan kursi dokter.'],
- ['unit2','Ruang Tindakan 2',8,5,6,3.5,'#deece7','Dental unit kedua dengan perlengkapan tindakan lengkap.'],
- ['sterile','Sterilisasi',14,5,4,3.5,'#e8e9e3','Pencucian dan sterilisasi instrumen; alur kotor-bersih harus dirancang terpisah.'],
- ['xray','Radiografi',0,8.5,6,3.5,'#e3e6e8','Radiografi intraoral: lengan rontgen terpasang di dinding, kursi pasien, sensor di meja, viewer hasil, dan area operator. Bukan unit panoramik. Shielding perlu desain profesional.'],
- ['unit3','Ruang Tindakan 3',8,8.5,6,3.5,'#deece7','Dental unit ketiga sesuai kapasitas awal dalam business plan.'],
- ['storage','Gudang & Utilitas',14,8.5,4,3.5,'#e9e8df','Penyimpanan, utilitas, dan perlengkapan pendukung operasional.'],
- ['innerhall','Koridor Dalam',6,5,2,7,'#f1eadf','Akses internal ke ruang klinis.']
-].map(([id,name,x,z,w,d,color,info])=>({id,name,x,z,w,d,color,info}));
-const visibleRooms=spaces.filter(s=>!s.id.includes('hall'));
+// All geometry is in metres; the layout records live in clinic-data.js and feed the 3D model and the 2D plan.
+const spaces=SPACES;
+const visibleRooms=ROOMS;
 const roomById=new Map(spaces.map(s=>[s.id,s]));
 const root=document.getElementById('viewport');
 let renderer;
@@ -33,7 +23,7 @@ root.appendChild(renderer.domElement);
 renderer.domElement.id='scene';
 const scene=new THREE.Scene();scene.background=new THREE.Color('#e7eee8');scene.fog=new THREE.Fog('#e7eee8',35,90);
 scene.add(new THREE.HemisphereLight('#fff8ed','#9aa998',.85));
-const sunlight=new THREE.DirectionalLight('#ffdfad',3.5);sunlight.position.set(-14,12,-10);sunlight.castShadow=true;sunlight.shadow.mapSize.set(2048,2048);sunlight.shadow.camera.left=-15;sunlight.shadow.camera.right=15;sunlight.shadow.camera.top=13;sunlight.shadow.camera.bottom=-13;sunlight.shadow.camera.near=1;sunlight.shadow.camera.far=52;sunlight.shadow.normalBias=.018;scene.add(sunlight);
+const sunlight=new THREE.DirectionalLight('#ffdfad',3.5);sunlight.position.set(-14,12,-10);sunlight.castShadow=true;sunlight.shadow.mapSize.set(2048,2048);sunlight.shadow.camera.left=-20;sunlight.shadow.camera.right=20;sunlight.shadow.camera.top=18;sunlight.shadow.camera.bottom=-18;sunlight.shadow.camera.near=1;sunlight.shadow.camera.far=64;sunlight.shadow.normalBias=.018;scene.add(sunlight);
 sunlight.shadow.bias=-.00015;sunlight.shadow.autoUpdate=false;sunlight.shadow.needsUpdate=true;
 const fillLight=new THREE.DirectionalLight('#dbeaff',.35);fillLight.position.set(12,9,8);scene.add(fillLight);
 const camera=new THREE.PerspectiveCamera(38,1,.09,150);camera.position.set(23,23,25);
@@ -47,9 +37,7 @@ const m={wall:mat('#f8f7f1'),wood:mat('#bfa486'),sage:mat('#77998a'),green:mat('
 const P=(x,z,y=0)=>new THREE.Vector3(x-9,y,z-6);
 function cube(parent,x,z,y,w,d,h,material=m.white){let a=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);a.position.copy(P(x,z,y+h/2));a.castShadow=true;a.receiveShadow=true;parent.add(a);return a;}
 function cyl(parent,x,z,y,r,h,material){let a=new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,20),material);a.position.copy(P(x,z,y+h/2));a.castShadow=true;parent.add(a);return a;}
-function H(z,start,end,gaps=[]){let p=start;for(const [a,b] of gaps){if(a>p)cube(walls,(p+a)/2,z,0,a-p,.12,2.8,m.wall);p=b;}if(end>p)cube(walls,(p+end)/2,z,0,end-p,.12,2.8,m.wall);}
-function V(x,start,end,gaps=[]){let p=start;for(const [a,b] of gaps){if(a>p)cube(walls,x,(p+a)/2,0,.12,a-p,2.8,m.wall);p=b;}if(end>p)cube(walls,x,(p+end)/2,0,.12,end-p,2.8,m.wall);}
-const backdrop=cube(scene,9,6,-.34,38,30,.04,mat('#d9dfd1'));
+const backdrop=cube(scene,9,0,-.44,96,84,.04,new THREE.MeshBasicMaterial({color:'#dfe7dc'}));
 cube(scene,9,6,-.28,18.65,12.65,.22,mat('#ccd8ce'));cube(scene,9,6,-.06,18.3,12.3,.15,mat('#faf8f3'));
 const floorMats=new Map();
 function floorTexture(wood){
@@ -65,32 +53,24 @@ function floorTexture(wood){
 }
 const timber=floorTexture(true),tile=floorTexture(false);
 for(const r of spaces){let material=mat('#ffffff',.78);material.map=(['waiting','consult','staff'].includes(r.id)?timber:tile).clone();material.map.repeat.set(r.w/3,r.d/3);floorMats.set(r.id,material);cube(scene,r.x+r.w/2,r.z+r.d/2,.09,r.w-.02,r.d-.02,.032,material);}
-H(0,0,18,[[6.15,7.85]]);H(12,0,18);V(0,0,12);V(18,0,12);
-H(3.5,0,18,[[6.2,7.8],[9.5,10.55],[13.25,14.25],[16.3,17.22]]);
-V(8,0,3.5);V(12,0,3.5);V(16,0,3.5);
-H(5,0,18,[[6.15,7.85],[9.9,11],[15.3,16.25]]);
-H(8.5,0,18,[[6.1,7.9],[10.05,11.1],[15.4,16.4]]);
-V(6,5,12,[[6.05,7.15],[9.68,10.76]]);
-V(8,5,12,[[6.05,7.15],[9.68,10.76]]);
-V(14,5,12,[[6.08,7.13],[9.7,10.74]]);
-cube(walls,7,0,.15,1.60,.03,2.45,m.glass);
-for(const x of [2,4.2,12.7,15.1])cube(walls,x,12,1.27,1.52,.025,1.14,m.glass);
-cube(walls,10.0,3.5,.86,1.05,.024,1.52,m.glass);
 // Scandinavian finishes: timber slats, reception furniture, plants, and wall art.
 for(let i=0;i<15;i++)cube(props,.10,.29+i*.12,.27,.05,.065,2.16,m.wood);
 function desk(x,z,w=1.7,d=.72){cube(props,x,z,.72,w,d,.08,m.wood);for(const a of [-w/2+.12,w/2-.12])for(const b of [-d/2+.1,d/2-.1])cube(props,x+a,z+b,0,.055,.06,.72,m.green);}
-function plant(x,z,size=1){cyl(props,x,z,0,.25*size,.41*size,mat('#d4bda5'));let leave=mat('#537c60');for(let i=0;i<9;i++){let angle=2*Math.PI*i/9;let geo=new THREE.SphereGeometry(.2*size,9,7),leaf=new THREE.Mesh(geo,leave);leaf.scale.set(.42,1.9,.6);leaf.position.copy(P(x+Math.cos(angle)*.22*size,z+Math.sin(angle)*.22*size,.79*size));leaf.rotation.set(Math.sin(angle)*.24,0,Math.cos(angle)*.24);props.add(leaf);}}
 desk(10,1.65,2.0);desk(13.6,1.8,1.7);desk(4.6,11.3,1.6);
-plant(.39,.64,.82);plant(7.63,1.14,.68);plant(11.48,.67,.9);plant(13.0,3.0,.8);
+// Potted plants keep their original spots; architecture.js instances them with the new dressing.
+const plantSpots=[[.39,.64,.82],[7.63,1.14,.68],[11.48,.67,.9],[13.0,3.0,.8]];
+let envMap=null;
+try{const pmrem=new THREE.PMREMGenerator(renderer);envMap=pmrem.fromScene(new RoomEnvironment(),.04).texture;pmrem.dispose();}catch(error){envMap=null;}
+const makeCanvas=(w,h)=>{const c=document.createElement('canvas');c.width=w;c.height=h;return c;};
+const shell=buildArchitecture({canvas:makeCanvas,shared:m,envMap,plants:plantSpots});
+walls.add(shell.full,shell.cut);scene.add(shell.roof,shell.site,shell.details);overhead.add(shell.overhead);
 // Four local fill lights share the sun's single shadow map.
 for(const [x,z] of [[4,2],[13,2],[4,10],[13,7]]){const light=new THREE.PointLight('#fff1dd',5,9,2);light.position.copy(P(x,z,2.55));scene.add(light);}
-const trim=mat('#ded8cb');
-walls.children.filter(o=>o.isMesh&&o.material===m.wall).forEach(wall=>{const size=wall.geometry.parameters;const skirting=new THREE.Mesh(new THREE.BoxGeometry(size.width+.015,.11,size.depth+.015),trim);skirting.position.copy(wall.position);skirting.position.y=.19;props.add(skirting);});
 const colliders=[];
 for(const r of spaces){const o=new THREE.Mesh(new THREE.PlaneGeometry(r.w-.15,r.d-.15),new THREE.MeshBasicMaterial({visible:false,side:THREE.DoubleSide}));o.rotation.x=-Math.PI/2;o.position.copy(P(r.x+r.w/2,r.z+r.d/2,.156));o.userData.room=r.id;scene.add(o);colliders.push(o);}
 const roomList=document.getElementById('roomList');
 for(let i=0;i<visibleRooms.length;i++){let r=visibleRooms[i],b=document.createElement('button');b.className='room';b.dataset.id=r.id;b.innerHTML=`<span class="dot" style="background:${r.color};border:1px solid #bfd0c2"></span><span>${r.name}</span><span class="num">${String(i+1).padStart(2,'0')}</span>`;b.onclick=()=>select(r.id,true);roomList.appendChild(b);}
-let current=camera,view='3d',selected=null,hover=null,cutaway=true,tween=null;
+let current=camera,view='3d',selected=null,hover=null,cutaway=true,roofOn=true,tween=null;
 const labels=new Map();
 for(const r of visibleRooms){let e=document.createElement('div');e.className='room-label';e.textContent=r.name;root.appendChild(e);labels.set(r.id,e);}
 function updateFloor(){needsRender=true;for(const r of spaces){floorMats.get(r.id).color.set(r.id===selected?'#f7d4a5':r.id===hover?'#fff0d8':'#ffffff');}}
@@ -101,6 +81,18 @@ function select(id,zoom=false){
  document.getElementById('detailTitle').textContent=room?room.name:'Explore the clinic';
  document.getElementById('detailText').textContent=room?room.info:'Pilih ruangan dari daftar atau klik langsung pada lantai model.';
  updateFloor();
+ // Looking into a room needs the roof off and the cutaway walls back.
+ if(room&&roofOn&&(view==='3d'||view==='walk')){roofOn=false;cutaway=view!=='walk';applyShell();}
+ if(zoom&&room&&view==='walk'){
+  // Eye Level: stand just inside the room's door and look across the room.
+  const door=OPENINGS.find(o=>o.room===id&&o.type!=='window'&&o.type!=='open');
+  let eye=P(room.x+.6,room.z+.6,1.6);
+  if(door){const w=wallById.get(door.wall),mid=(door.from+door.to)/2,inward=door.type==='entry'?-door.swing:door.swing;eye=w.o==='h'?P(mid,w.at+inward*.25,1.6):P(w.at+inward*.25,mid,1.6);}
+  const centre=P(room.x+room.w/2,room.z+room.d/2,1.05),dir=centre.clone().sub(eye);
+  const look=eye.clone().addScaledVector(dir.normalize(),Math.max(control.minDistance+.2,centre.distanceTo(eye)));
+  tween={start:performance.now(),a:camera.position.clone(),b:eye,ta:control.target.clone(),tb:look};
+  return;
+ }
  if(zoom&&room&&view!=='2d'){
   const target=P(room.x+room.w/2,room.z+room.d/2,.5);
   const offset=room.id==='waiting'&&view==='3d'
@@ -219,18 +211,39 @@ function placeAll(){
 async function load(){const items=Object.entries(MODEL_DATA),total=items.length;let count=0;for(const [key,data] of items){await decode(key,data);count++;document.getElementById('progressBar').style.width=100*count/total+'%';document.getElementById('progressLabel').textContent=`Menyiapkan interior ${count} / ${total}`;if(count%2===0)await new Promise(r=>setTimeout(r,0));}placeAll();sunlight.shadow.needsUpdate=true;needsRender=true;document.getElementById('loader').style.display='none';}
 const pngButton=document.getElementById('pngBtn');
 load().catch(e=>{console.error(e);document.getElementById('progressLabel').textContent='Ada aset yang gagal. Ruang dasar masih bisa dilihat.';return new Promise(resolve=>setTimeout(()=>{document.getElementById('loader').style.display='none';resolve();},2000));})
- .then(()=>{pngButton.disabled=false;});
-function setView(v){control.enableDamping=false;control.update();control.enableDamping=true;view=v;tween=null;document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===v));
+ .then(()=>{pngButton.disabled=false;applyHash();});
+// Shareable state: #view=3d|2d|walk&room=unit1&roof=0
+function applyHash(){
+ const q=new URLSearchParams(location.hash.slice(1));if(![...q.keys()].length)return;
+ if(q.get('roof')==='0'){roofOn=false;applyShell();}
+ const v=q.get('view');if(['3d','2d','walk'].includes(v))setView(v);
+ if(roomById.has(q.get('room')))select(q.get('room'),true);
+}
+addEventListener('hashchange',applyHash);
+const wallButton=document.getElementById('wallBtn'),roofButton=document.getElementById('roofBtn');
+// Roof on shows the whole building; roof off falls back to the cutaway or full-wall choice.
+function applyShell(){
+ const full=roofOn||!cutaway;
+ shell.full.visible=full;shell.cut.visible=!full;
+ shell.roof.visible=roofOn&&view!=='2d';
+ wallButton.textContent=full?'▣ Full walls':'◧ Cutaway walls';
+ roofButton.setAttribute('aria-pressed',String(roofOn));
+ roofButton.textContent=roofOn?'⌂ Atap: tampil':'⌂ Atap: sembunyi';
+ sunlight.shadow.needsUpdate=true;needsRender=true;
+}
+function setView(v){control.enableDamping=false;control.update();control.enableDamping=true;view=v;tween=null;document.querySelectorAll('[data-view]').forEach(b=>{b.classList.toggle('active',b.dataset.view===v);b.setAttribute('aria-pressed',String(b.dataset.view===v));});
  if(v==='2d'){current=planCamera;control.object=planCamera;control.enableRotate=false;planCamera.position.set(0,35,.0001);planCamera.zoom=1;control.target.set(0,0,0);walls.visible=false;}
- else{current=camera;control.object=camera;control.enableRotate=true;camera.zoom=1;if(v==='walk'){camera.position.set(-4.4,1.7,-5.2);control.target.set(-1.4,1.5,1);}else{fitClinic();}walls.visible=true;}
- overhead.visible=v==='walk';sunlight.shadow.needsUpdate=true;needsRender=true;
+ else{current=camera;control.object=camera;control.enableRotate=true;camera.zoom=1;camera.fov=v==='walk'?56:38;camera.updateProjectionMatrix();if(v==='walk'){roofOn=false;cutaway=false;camera.position.set(-4.4,1.7,-5.2);control.target.set(-1.4,1.5,1);}else{if(!selected){roofOn=true;cutaway=true;}fitClinic();}walls.visible=true;}
+ overhead.visible=v==='walk';applyShell();
  current.updateProjectionMatrix();
  document.getElementById('viewHint').textContent=v==='2d'?'Top-down room plan · Scroll to zoom':v==='walk'?'Eye level · Drag to look around':'Drag to orbit · Scroll to zoom · Click to inspect';control.update();}
 document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>setView(b.dataset.view));
-document.getElementById('wallBtn').onclick=()=>{cutaway=!cutaway;walls.scale.y=cutaway?.27:1;sunlight.shadow.needsUpdate=true;needsRender=true;document.getElementById('wallBtn').textContent=cutaway?'◧ Cutaway walls':'▣ Full walls';};
-walls.scale.y=.27;
+wallButton.onclick=()=>{if(roofOn||!cutaway){roofOn=false;cutaway=true;}else cutaway=false;applyShell();};
+roofButton.onclick=()=>{roofOn=!roofOn;if(roofOn&&selected)select(null);applyShell();};
 overhead.visible=false;
-document.getElementById('resetBtn').onclick=()=>{hover=null;select(null);setView('3d');};
+applyShell();
+document.getElementById('resetBtn').onclick=()=>{hover=null;select(null);roofOn=true;cutaway=true;setView('3d');};
+function toastMessage(text){const toast=document.getElementById('toast');clearTimeout(screenshotNotice);toast.textContent=text;toast.style.display='block';screenshotNotice=setTimeout(()=>{toast.style.display='none';},4000);}
 let screenshotNotice;
 pngButton.onclick=()=>{
  const toast=document.getElementById('toast');
@@ -278,13 +291,15 @@ let down=null;
 renderer.domElement.addEventListener('pointerdown',e=>{down=[e.clientX,e.clientY];});
 renderer.domElement.addEventListener('pointerup',e=>{if(down&&Math.hypot(e.clientX-down[0],e.clientY-down[1])<5){let id=pick(e);if(id)select(id);}down=null;});
 renderer.domElement.addEventListener('pointermove',e=>{if(down)return;const id=pick(e);if(id!==hover){hover=id;renderer.domElement.style.cursor=id?'pointer':'grab';updateFloor();}});
+// Framing box in world metres: building, AC units, parapet, canopy and the front plaza.
+const FIT={x:[-9.6,10.2],y:[-.3,3.6],z:[-11,6.5]};
 function fitClinic(){
- const target=new THREE.Vector3(0,.65,0),direction=new THREE.Vector3(1,1.25,1.1).normalize();
+ const target=new THREE.Vector3(0,.65,0),direction=new THREE.Vector3(.5,1.05,-1.25).normalize();
  camera.position.copy(target).add(direction);camera.lookAt(target);camera.updateMatrixWorld(true);
  const inverse=camera.quaternion.clone().invert(),vertical=Math.tan(THREE.MathUtils.degToRad(camera.fov/2)),horizontal=vertical*camera.aspect;
  const corners=[];
  let distance=0;
- for(const x of [-9.6,10.2])for(const y of [-.3,3.1])for(const z of [-6.5,6.5]){
+ for(const x of FIT.x)for(const y of FIT.y)for(const z of FIT.z){
   const point=new THREE.Vector3(x,y,z);
   corners.push(point);
   const corner=point.clone().sub(target).applyQuaternion(inverse);
@@ -330,3 +345,4 @@ function renderView(){
 }
 function frame(now){requestAnimationFrame(frame);if(tween){needsRender=true;let t=Math.min((now-tween.start)/770,1);t=1-Math.pow(1-t,3);camera.position.lerpVectors(tween.a,tween.b,t);control.target.lerpVectors(tween.ta,tween.tb,t);if(t===1)tween=null;}control.update();if(needsRender)renderView();}
 requestAnimationFrame(frame);
+window.__elora={renderer,scene,setView,select,shell};
